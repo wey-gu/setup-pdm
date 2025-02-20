@@ -46,6 +46,9 @@ inputs:
   update-python:
     description: Whether to update the environment with the requested Python
     default: 'true'
+  pypi-mirror:
+    description: 'PyPI mirror URL to use for package installation'
+    required: false
 outputs:
   python-version:
     description: The installed Python or PyPy version. Useful when given a version range as input.

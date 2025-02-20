@@ -31,12 +31,22 @@ async function run(): Promise<void> {
   const pythonVersion = utils.resolveVersionInput()[0] || '3.x'
   const updateEnvironment = core.getBooleanInput('update-python')
   const allowPythonPreReleases = core.getBooleanInput('allow-python-prereleases')
+  const pypiMirror = core.getInput('pypi-mirror')
   const cmdArgs = ['-']
+
   if (core.getBooleanInput('prerelease'))
     cmdArgs.push('--prerelease')
 
   if (pdmVersion)
     cmdArgs.push('--version', pdmVersion)
+
+  // Add PyPI mirror configuration if provided
+  if (pypiMirror) {
+    core.info(`Using PyPI mirror: ${pypiMirror}`)
+    core.exportVariable('PDM_PYPI_URL', pypiMirror)
+    // Also set pip's index-url for the installation process
+    core.exportVariable('PIP_INDEX_URL', pypiMirror)
+  }
 
   cmdArgs.push('-o', 'install-output.json')
   // Use the default python version installed with the runner
